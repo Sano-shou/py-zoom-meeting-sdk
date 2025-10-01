@@ -377,6 +377,9 @@ class MeetingBot:
             self.audio_raw_data_sender.send(chunk, 32000, zoom.ZoomSDKAudioChannel_Mono)
 
     def on_one_way_audio_raw_data_received_callback(self, data, node_id):
+        user_name = self.participants_ctrl.GetUserByUserID(node_id).GetUserName()
+        self.write_to_file(f"sample_program/out/audio_{user_name}.raw", data)
+        
         if os.environ.get('DEEPGRAM_API_KEY') is None:
             volume = normalized_rms_audio(data.GetBuffer())
             if self.audio_print_counter % 20 < 2 and volume > 0.01:
